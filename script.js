@@ -1,11 +1,13 @@
 $(document).ready(function() {
     var characters = [
         {name:"Albus Dumbledore", role:"staff", house:"Gryffindor", gender:"m", alignment:"good"},    
-        {name:"Nymphadora Tonks", role:"", house:"Hufflepuff", gender:"f", alignment:"good"},    
-        // Add more characters here...
+        {name:"Nymphadora Tonks", role:"", house:"Hufflepuff", gender:"f", alignment:"good"},
+        // ... other characters ...
+
+        // Adding Harry Potter
+        {name:"Harry Potter", role:"student", house:"Gryffindor", gender:"m", alignment:"good"},
     ];
 
-    var uniqueHouses = [];
     var $characterTableBody = $('#characterTableBody');
     var $buttonsDiv = $('#buttons');
     var $resetButton = $('#resetButton');
@@ -13,7 +15,7 @@ $(document).ready(function() {
     // Generate table rows and house buttons
     characters.forEach(function(character) {
         // Generate table row and append to tbody
-        var row = '<tr>' +
+        var row = '<tr data-house="' + character.house + '">' +
             '<td>' + character.name + '</td>' +
             '<td>' + character.role + '</td>' +
             '<td>' + character.house + '</td>' +
@@ -21,12 +23,12 @@ $(document).ready(function() {
             '<td>' + character.alignment + '</td>' +
             '</tr>';
         $characterTableBody.append(row);
-
-        // Collect unique houses
-        if (uniqueHouses.indexOf(character.house) === -1) {
-            uniqueHouses.push(character.house);
-        }
     });
+
+    // Collect unique houses
+    var uniqueHouses = Array.from(new Set(characters.map(function(character) {
+        return character.house;
+    })));
 
     // Generate house buttons
     uniqueHouses.forEach(function(house) {
@@ -43,19 +45,11 @@ $(document).ready(function() {
 
         // Show rows that match the selected house
         $characterTableBody.find('tr[data-house="' + selectedHouse + '"]').show();
-
-        // Update row colors
-        $characterTableBody.find('tr:visible:odd').addClass('over');
-        $characterTableBody.find('tr:visible:even').removeClass('over');
     });
 
     // Click event handler for reset button
     $resetButton.on('click', function() {
         // Show all rows
         $characterTableBody.find('tr').show();
-
-        // Reset row colors
-        $characterTableBody.find('tr:odd').removeClass('over');
-        $characterTableBody.find('tr:even').removeClass('over');
     });
 });
